@@ -7,31 +7,33 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.enlaps.m.and.todo.ActivityHome">
+    tools:context="com.enlaps.m.and.todo.ActivityItemEdit">
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/etInput"
-        android:layout_centerVertical="true"
-        android:layout_alignParentStart="true"
-        android:hint="@string/string_enter_new_item" />
+        android:id="@+id/etItemNewValue"
+        android:hint="Item to edit"
+        android:layout_marginTop="32dp"
+        android:layout_below="@+id/textView" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/string_add_item"
-        android:id="@+id/button"
-        android:onClick="handlerBtnAddItemOnClick"
-        android:layout_alignBottom="@+id/etInput"
-        android:layout_alignParentEnd="true" />
+        android:text="@string/string_save"
+        android:id="@+id/button2"
+        android:layout_marginTop="26dp"
+        android:onClick="btnSaveOnClick"
+        android:layout_below="@+id/etItemNewValue"
+        android:layout_alignParentStart="true" />
 
-    <ListView
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/lvTodo"
+        android:text="@string/string_edit_item_below"
+        android:id="@+id/textView"
+        android:layout_marginTop="33dp"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:choiceMode="singleChoice"/>
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>

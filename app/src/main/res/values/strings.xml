@@ -2,4 +2,7 @@
     <string name="app_name">ToDo</string>
     <string name="string_enter_new_item">Enter new item</string>
     <string name="string_add_item">Add item</string>
+    <string name="string_item_default">item</string>
+    <string name="string_save">Save</string>
+    <string name="string_edit_item_below">Edit item below</string>
 </resources>
