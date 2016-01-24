@@ -22,8 +22,6 @@ public class ActivityItemEdit extends AppCompatActivity {
             m_etItemNewValue = (EditText) findViewById(R.id.etItemNewValue);
 
         try {
-
-
             Intent i = getIntent();
 
             String itemTextOld = i.getStringExtra( ActivityHome.INTENT_MESSAGE_ITEM_TEXT);
