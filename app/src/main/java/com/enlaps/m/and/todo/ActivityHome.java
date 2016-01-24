@@ -1,9 +1,13 @@
 package com.enlaps.m.and.todo;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Selection;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -40,6 +44,10 @@ public class ActivityHome extends AppCompatActivity {
         static final String INTENT_MESSAGE_ITEM_TEXT = "INTENT_MESSAGE_ITEM_TEXT";
         static final int INTENT_REQUEST_CODE = 0;
 
+    // Database
+        private SqliteHelper    m_dbHelper;
+        private SQLiteDatabase  m_db;
+
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -58,8 +66,13 @@ public class ActivityHome extends AppCompatActivity {
 
         m_arrayList = new ArrayList<String>();
 
+        // Database
+            m_dbHelper = new SqliteHelper(this);
+            m_db = m_dbHelper.getWritableDatabase();
+
+
         // ItemList: Load
-            loadItems();
+            loadItemsFromDB();
 
         // ListView: Adapter
 
@@ -69,6 +82,7 @@ public class ActivityHome extends AppCompatActivity {
 
         // ListView: Item: Long Click
             listViewItemClickSetup();
+
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -87,7 +101,36 @@ public class ActivityHome extends AppCompatActivity {
         // EditText: Clear
         m_etInput.setText("");
 
-        saveItems();
+        // Add Item to Table
+            insertRow(item);
+    }
+
+    protected long insertRow(String itemName) {
+
+        ContentValues rowValues = new ContentValues();
+
+        rowValues.put(DBSchema.ItemTable.COL_NAME_TITLE, itemName);
+
+        return m_db.insert(DBSchema.ItemTable.TABLE_NAME, null, rowValues);
+    }
+
+    protected int deleteRow(String itemName) {
+
+        String selection        = DBSchema.ItemTable.COL_NAME_TITLE + " LIKE ?";
+        String selectionArgs[]  = {itemName};
+
+        return m_db.delete(DBSchema.ItemTable.TABLE_NAME, selection, selectionArgs);
+    }
+
+    protected int updateRow(String itemNameOld, String itemNameNew) {
+
+        String  selection       = DBSchema.ItemTable.COL_NAME_TITLE + " LIKE ?";
+        String  selectionArgs[] = {itemNameOld};
+        ContentValues   rowValues = new ContentValues();
+
+        rowValues.put(DBSchema.ItemTable.COL_NAME_TITLE, itemNameNew);
+
+        return m_db.update(DBSchema.ItemTable.TABLE_NAME, rowValues, selection, selectionArgs);
     }
 
     private void listViewItemClickSetup() {
@@ -111,6 +154,9 @@ public class ActivityHome extends AppCompatActivity {
                 new AdapterView.OnItemLongClickListener() {
                     @Override
                     public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                        ActivityHome.this.deleteRow(m_arrayList.get(i));
+
                         m_arrayList.remove(i);
                         m_adapter.notifyDataSetChanged();
                         return true;
@@ -126,38 +172,42 @@ public class ActivityHome extends AppCompatActivity {
         if( (requestCode == ActivityHome.INTENT_REQUEST_CODE)
          && (resultCode == RESULT_OK)
          && (data != null)) {
-            m_arrayList.set( ActivityHome.this.currentItem, data.getStringExtra(ActivityItemEdit.INTENT_MESSAGE_ITEM_VALUE_NEW));
+
+            String oldValue = m_arrayList.get(ActivityHome.this.currentItem);
+            String newValue = data.getStringExtra(ActivityItemEdit.INTENT_MESSAGE_ITEM_VALUE_NEW);
+
+            // Update database
+                updateRow( oldValue, newValue);
+
+            m_arrayList.set( ActivityHome.this.currentItem, newValue);
             m_adapter.notifyDataSetChanged();
         }
     }
 
-    private void loadItems() {
+    private void loadItemsFromDB() {
 
-        File fileDir = getFilesDir();
-        File itemFile = new File( fileDir, FILE_TODO);
 
-        try {
-            m_arrayList = new ArrayList<String>(FileUtils.readLines(itemFile));
-        } catch (IOException ioe) {
-            m_arrayList = new ArrayList<String>();
+        String      selection = null;
+        String[]    selectionArgs = {};
+        String[]    projection = {DBSchema.ItemTable.COL_NAME_TITLE};
+
+        Cursor      c = m_db.query(DBSchema.ItemTable.TABLE_NAME, projection, selection, selectionArgs, null, null, null);
+
+        if( c == null) {
+            return;
+        }
+
+        int itemTitleIndex = c.getColumnIndexOrThrow(DBSchema.ItemTable.COL_NAME_TITLE);
+
+        if( c.moveToFirst()) {
+
+            do {
+                m_arrayList.add(c.getString(itemTitleIndex));
+            }while ( c.moveToNext());
         }
     }
 
     private void cleanUp() {
-        saveItems();
-    }
-
-    private void saveItems() {
-
-        File fileDir = getFilesDir();
-        File itemFile = new File( fileDir, FILE_TODO);
-
-        try {
-            FileUtils.writeLines( itemFile, m_arrayList);
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-        }
-
     }
 
     @Override
