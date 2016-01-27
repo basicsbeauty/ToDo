@@ -15,7 +15,8 @@
         android:id="@+id/etInput"
         android:layout_centerVertical="true"
         android:layout_alignParentStart="true"
-        android:hint="@string/string_enter_new_item" />
+        android:hint="@string/string_enter_new_item"
+        android:visibility="invisible" />
 
     <Button
         android:layout_width="wrap_content"
@@ -24,7 +25,8 @@
         android:id="@+id/button"
         android:onClick="handlerBtnAddItemOnClick"
         android:layout_alignBottom="@+id/etInput"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:visibility="invisible" />
 
     <ListView
         android:layout_width="wrap_content"
@@ -32,6 +34,18 @@
         android:id="@+id/lvTodo"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
-        android:choiceMode="singleChoice"/>
+        android:choiceMode="singleChoice"
+        android:visibility="visible" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:clickable="true"
+        android:elevation="12dp"
+        android:src="@drawable/ic_add_white_24dp1"
+        android:onClick="fabAddOnClick"
+        />
 
 </RelativeLayout>

@@ -5,4 +5,15 @@
     <string name="string_item_default">item</string>
     <string name="string_save">Save</string>
     <string name="string_edit_item_below">Edit item below</string>
+    <string name="string_title">Title</string>
+    <string name="string_due_date">Due Date</string>
+    <string name="string_priority">Priority</string>
+    <string name="string_default_date">10-10-2016</string>
+
+    <string-array name="item_priority">
+        <item>HIGH</item>
+        <item>MEDIUM</item>
+        <item>LOW</item>
+    </string-array>
+
 </resources>
