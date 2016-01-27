@@ -181,6 +181,25 @@ public class ActivityHome extends AppCompatActivity {
             loadItemsFromDB();
             mItemAdapter.notifyDataSetChanged();
         }
+        else if( (requestCode == ActivityHome.INTENT_REQUEST_CODE_EDIT)
+                && (resultCode == RESULT_OK)
+                && (data != null)) {
+
+            Item itemTemp;
+
+            itemTemp = mItemArray.get(ActivityHome.this.currentItem);
+
+            long dueDate = data.getLongExtra(ActivityItemEdit.INTENT_MESSAGE_ITEM_VALUE_DUE_DATE, System.currentTimeMillis());
+            String title = data.getStringExtra(ActivityItemEdit.INTENT_MESSAGE_ITEM_VALUE_NEW);
+            String priority = data.getStringExtra(ActivityItemEdit.INTENT_MESSAGE_ITEM_VALUE_PRIORITY);
+
+            // Update database
+                Log.d("Update T", title);
+                m_dbHelper.updateRow( itemTemp.id, title, new Date(dueDate), priority);
+
+            loadItemsFromDB();
+            mItemAdapter.notifyDataSetChanged();
+        }
     }
 
     private void loadItemsFromDB() {

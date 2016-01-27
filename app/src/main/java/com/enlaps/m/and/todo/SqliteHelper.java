@@ -99,4 +99,19 @@ public class SqliteHelper extends SQLiteOpenHelper {
 
         return m_db.update(DBSchema.ItemTable.TABLE_NAME, rowValues, selection, selectionArgs);
     }
+    protected int updateRow(int id, String itemName, Date date, String priority) {
+
+        String  selection       = DBSchema.ItemTable.COL_NAME_ID + " = " + id;
+        ContentValues   rowValues = new ContentValues();
+
+        // Date
+        SimpleDateFormat dateFormatMMDDYY = new SimpleDateFormat("MM-dd-yyyy");
+
+        rowValues.put(DBSchema.ItemTable.COL_NAME_ID, id);
+        rowValues.put(DBSchema.ItemTable.COL_NAME_TITLE, itemName);
+        rowValues.put(DBSchema.ItemTable.COL_NAME_DUE_DATE, dateFormatMMDDYY.format(date));
+        rowValues.put(DBSchema.ItemTable.COL_NAME_PRIORITY, priority);
+
+        return m_db.update(DBSchema.ItemTable.TABLE_NAME, rowValues, selection, null);
+    }
 }
